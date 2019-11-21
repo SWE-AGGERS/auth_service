@@ -115,5 +115,22 @@ paths:
                       type: string
                     user_id:
                       type: integer 
- 
- 
+  /delete/<user_id>:
+    delete:
+      summary: "delete user by id"
+      description: ""
+
+      responses:
+        '200':
+            description: A JSON string with a response message
+            content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      response:
+                        type: boolean
+                        description: >
+                          Messages:
+                           * `'True'` - User was deleted
+                           * `'False'` - User was not deleted
