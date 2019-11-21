@@ -1,5 +1,5 @@
 import unittest
-from monolith import app
+from auth_service import app
 
 
 class LogoutTestCase(unittest.TestCase):
