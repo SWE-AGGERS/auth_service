@@ -67,6 +67,7 @@ def signup():
 
     return jsonify({'user_id': user_id, 'error': error, 'error_message': error_message })
 
+
 @auth.route("/delete", methods=['DELETE'])
 def delete():
     json = request.get_json()
