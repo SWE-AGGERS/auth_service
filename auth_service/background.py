@@ -1,6 +1,6 @@
 from celery import Celery
 
-from monolith.database import db, Story, Reaction
+from auth_service.database import db, Story, Reaction
 
 BACKEND = BROKER = 'redis://localhost:6379'
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
@@ -12,7 +12,7 @@ _APP = None
 def update_reactions(story_id):
     global _APP
     if _APP is None:
-        from monolith.app import create_app
+        from auth_service.app import create_app
         app = create_app()
         # db.init_app(app)
     else:

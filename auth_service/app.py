@@ -2,9 +2,9 @@ import datetime
 
 from flask import Flask
 
-from monolith.auth import login_manager
-from monolith.database import db, User, Story
-from monolith.views import blueprints
+from auth_service.auth import login_manager
+from auth_service.database import db, User, Story
+from auth_service.views import blueprints
 
 
 def create_app(debug=False):
