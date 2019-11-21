@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: SocialDice Auth Service
+
+paths:
+  /login:
+     post:
+      summary: "checks user email and password to authenticate"
+      description: ""
+      operationId: "Check user"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                    type: string
+                password:
+                    type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: A JSON string with a response message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  response:
+                    type: boolean
+                    description: >
+                      Messages:
+                       * `'True'` - User is authenticated
+                       * `'False'` - User is not authenticated
+                  user_id:
+                    type: integer 
+     
+                    
+  /singup:
+    post:
+      summary: "checks user data and create an user on database"
+      description: ""
+      operationId: "Sing up user"
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                dateofbirth:
+                  type: string
+                password:
+                  type: string
+              required:
+                - firstname
+                - lastname
+                - email
+                - dateofbirth
+                - password
+                  
+      responses:
+        '200':
+          description: A JSON string with a response message
+          content:
+            applicaion/json:
+              schema:
+                type: object
+                properties:
+                  response: 
+                    type: boolean
+                    description: >
+                      Messages:
+                       * `'True'` - User was created
+                       * `'False'` - User was not created
+                  user_id:
+                     type: integer  
+                     description: >
+                      Messages:
+                        * `-1` - User email is used already or error.
+                        * `< 0 ` - Registered user and return id of user.
+                        
+  /user/<user_id>:
+    get:
+        summary: "get user information by id"
+        description: ""
+        operationId: " Get user "
+          
+        responses:
+          '200':
+            description: A JSON string with a response message
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    firstname:
+                      type: string
+                    lastname:
+                      type: string
+                    email:
+                      type: string
+                    dateofbirth:
+                      type: string
+                    user_id:
+                      type: integer 
+ 
+ 

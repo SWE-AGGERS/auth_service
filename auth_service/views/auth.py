@@ -37,7 +37,6 @@ def logout():
 @auth.route("/signup", methods=['POST'])
 def signup():
     json = request.get_json()
-    print(json)
     email = json['email']
     check_query = db.session.query(User).filter(User.email == email)
     user = check_query.first()
@@ -71,7 +70,32 @@ def signup():
 @auth.route("/delete", methods=['DELETE'])
 def delete():
     json = request.get_json()
-    user_id = json['user_id']
-    db.session.query(User).filter(User.id == user_id).delete()
-    db.session.commit()
+    id = json['user_id']
+    query = db.session.query(User).filter(User.id == id)
+    user = query.first()
+    response = False
+    if user:
+        json = request.get_json()
+        user_id = json['user_id']
+        db.session.query(User).filter(User.id == user_id).delete()
+        db.session.commit()
+        response = True
+    else:
+        response = False
+
     return jsonify({"response": True})
+
+
+@auth.route("/users", methods=["GET"])
+def users():
+        return ""
+
+
+@auth.route("/user/<user_id>", methods=["GET"])
+def user(user_id):
+    query = db.session.query(User).filter(User.id == user_id)
+    user = query.first()
+    return jsonify({"firstname": user.firstname, "lastname": user.lastname, "email":user.email, "dateofbirth": user.dateofbirth})
+
+
+
