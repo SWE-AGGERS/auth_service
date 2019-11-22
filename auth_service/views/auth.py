@@ -1,8 +1,5 @@
-from flask import Blueprint, render_template, redirect, request, jsonify
-
+from flask import Blueprint, request, jsonify
 from auth_service.database import db, User
-from auth_service.forms import LoginForm
-from auth_service.forms import UserForm
 import datetime
 
 auth = Blueprint('auth', __name__)
@@ -32,13 +29,13 @@ def signup():
     json = request.get_json()
     email = json['email']
     check_query = db.session.query(User).filter(User.email == email)
-    user = check_query.first()
+    result = check_query.first()
 
     error_message = ""
     user_id = -1
     error = False
 
-    if user is None:
+    if result is None:
         user = User()
         user.firstname = json['firstname']
         user.lastname = json['lastname']

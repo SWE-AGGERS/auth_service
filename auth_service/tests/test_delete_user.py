@@ -14,7 +14,7 @@ class DeleteUserTestCase(unittest.TestCase):
 
     def testUnsuccessfullyDelete(self):
         tester = self.getTester
-        reply = delete(tester, user_id=1)
+        reply = delete(tester, user_id=2)
         assert b'{"response":false}' in reply.data
 
     @property
