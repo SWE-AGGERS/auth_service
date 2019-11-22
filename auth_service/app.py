@@ -2,7 +2,6 @@ import datetime
 
 from flask import Flask
 
-from auth_service.auth import login_manager
 from auth_service.database import db, User
 from auth_service.views import blueprints
 
@@ -24,7 +23,6 @@ def create_app(debug=False):
         bp.app = app
 
     db.init_app(app)
-    login_manager.init_app(app)
     db.create_all(app=app)
 
     # create a first admin user

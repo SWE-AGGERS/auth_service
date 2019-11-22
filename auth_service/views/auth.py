@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, redirect, request, jsonify
-from flask_login import (current_user, login_user, logout_user, login_required)
 
 from auth_service.database import db, User
 from auth_service.forms import LoginForm

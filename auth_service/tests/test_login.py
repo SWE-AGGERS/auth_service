@@ -1,22 +1,21 @@
 import unittest
 from auth_service import app
+from flask import jsonify
 
 
 class LoginTestCase(unittest.TestCase):
 
-    def testLoginPage(self):
-        response = self.getTester.get('/login', content_type='html/text')
-        self.assertEqual(response.status_code, 200)
-
     def testUnsuccessfulLogin(self):
         tester = self.getTester
         reply = login(tester, "selman@hotmail", "12345")
-        assert b'User not found' in reply.data
+
+        assert b'{"response":false,"user_id":-1}' in reply.data
 
     def testSuccessfulLogin(self):
         tester = self.getTester
         reply = login(tester, "example@example.com", "admin")
-        assert b'Index Page' in reply.data
+        assert b'{"response":true,"user_id":1}' in reply.data
+
 
     @property
     def getTester(self):
@@ -26,8 +25,12 @@ class LoginTestCase(unittest.TestCase):
 
 
 def login(client, username, password):
-    return client.post('/login', data=dict(
-        email=username,
-        password=password
-    ), follow_redirects=True)
+    return client.post('/login',
+                       json=
+                         {
+                             "email": username,
+                             "password": password
+                         }
+                       ,
+                       follow_redirects=True)
 
