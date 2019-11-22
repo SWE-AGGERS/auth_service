@@ -16,3 +16,4 @@ nltk
 pytest
 pytest-cov
 python-dotenv
+python-coveralls
