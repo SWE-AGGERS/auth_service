@@ -1,6 +1,5 @@
 import unittest
 from auth_service import app
-from flask import jsonify
 
 
 class GetUserByIdTestCase(unittest.TestCase):

@@ -74,7 +74,19 @@ def delete(user_id):
 
 @auth.route("/users", methods=["GET"])
 def users():
-        return ""
+        data = []
+        users = db.session.query(User).all()
+        for user in users:
+            usern = {
+                 "user_id" : user.id,
+                 "firstname": user.firstname,
+                 "lastname": user.lastname,
+                 "email": user.email,
+                 "dateofbirth": user.dateofbirth}
+
+            data.append(usern)
+
+        return jsonify(data)
 
 
 @auth.route("/user/<user_id>", methods=["GET"])
