@@ -4,30 +4,37 @@ from auth_service import app
 
 class SignupTestCase(unittest.TestCase):
 
-    def testSignupPage(self):
-        tester = self.getTester()
-        response = tester.get('/signup', content_type='html/text')
-        self.assertEqual(response.status_code, 200)
-
     def testSuccessfulSignup(self):
         tester = self.getTester()
-        user = dict(firstname="Selman",
-                    lastname="Alpdündar",
-                    email="selman@hotmail.com",
-                    dateofbirth=1994,
-                    password="123456")
+        user = {
+            "firstname": "selman",
+            "lastname": "alpdündar",
+            "email": "selman.alp@hotmail.com.tr",
+            "dateofbirth": {
+                "year": 1994,
+                "month": 9,
+                "day": 10
+            },
+            "password": "admin"
+        }
         response = signup(client=tester, data=user)
-        assert b'Index Page' in response.data
+        assert b'{"error":false,"error_message":"","user_id":2}' in response.data
 
     def testUnsuccessfulSignup(self):
         tester = self.getTester()
-        user = dict(firstname="Selman",
-                    lastname="Alpdündar",
-                    email="selman@hotmail.com",
-                    dateofbirth=1994,
-                    password="123456")
+        user = {
+            "firstname": "Admin",
+            "lastname": "Admin",
+            "email": "example@example.com",
+            "dateofbirth": {
+                "year": 2020,
+                "month": 10,
+                "day": 5
+            },
+            "password": "admin"
+        }
         response = signup(client=tester, data=user)
-        assert b'The email was used before. Please change the email!' in response.data
+        assert b'{"error":true,"error_message":"User is already exist","user_id":-1}' in response.data
 
     def getTester(self):
         application = app.create_app()
@@ -37,5 +44,5 @@ class SignupTestCase(unittest.TestCase):
 
 def signup(client, data):
     return client.post('/signup',
-                       data=data,
+                       json=data,
                        follow_redirects=True)

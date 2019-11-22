@@ -27,12 +27,6 @@ def login():
     return jsonify({"response": response, "user_id": user_id})
 
 
-@auth.route("/logout")
-def logout():
-    logout_user()
-    return redirect('/')
-
-
 @auth.route("/signup", methods=['POST'])
 def signup():
     json = request.get_json()
