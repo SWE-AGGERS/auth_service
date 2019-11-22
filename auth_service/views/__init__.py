@@ -1,3 +1,4 @@
 from .auth import auth
+from .follow import follow
 
-blueprints = [auth]
+blueprints = [auth, follow]
