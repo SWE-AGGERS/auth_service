@@ -55,7 +55,7 @@ def unfollow_user(follower_id,followed_id):
         return {"followed": -4, "message": "DB error during add_follow"}
 
     # return OK
-    return {"followed": get_followed_number(subject)}
+    return {"followed": get_followed_number(subject), "message": "OK"}
 
 
 @follow.route('/unfollow//<int:follower_id>/<int:followed_id>', methods=['POST'])
