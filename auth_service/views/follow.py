@@ -72,15 +72,8 @@ def get_is_follower(user_a, user_b):
 
 @follow.route('/followed/list/<int:subject>', methods=['GET'])
 def followed_list(subject):
-    temp = db.session.query(Followers, User).filter(
+    followed = db.session.query(Followers, User).filter(
         Followers.followed_id == User.id).filter_by(follower_id=subject).all()
-    followed = []
-
-    for f in temp:
-        d = {"id": f[1].id, "firstname": f[1].firstname,
-             "lastname": f[1].lastname}
-        followed.append(d)
-
     return jsonify({"followed": followed})
 
 """
