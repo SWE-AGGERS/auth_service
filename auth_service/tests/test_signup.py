@@ -18,7 +18,7 @@ class SignupTestCase(unittest.TestCase):
             "password": "admin"
         }
         response = signup(client=tester, data=user)
-        assert b'{"error":false,"error_message":"","user_id":2}' in response.data
+        assert b'"error":false,"error_message":"","user_id":2' in response.data
 
     def testUnsuccessfulSignup(self):
         tester = self.getTester()
@@ -34,7 +34,7 @@ class SignupTestCase(unittest.TestCase):
             "password": "admin"
         }
         response = signup(client=tester, data=user)
-        assert b'{"error":true,"error_message":"User is already exist","user_id":-1}' in response.data
+        assert b'"error":true,"error_message":"User is already exist","user_id":-1' in response.data
 
     def getTester(self):
         application = app.create_app()
