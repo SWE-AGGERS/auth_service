@@ -29,6 +29,16 @@ def login():
                     "auth_token": encode_auth_token(user_id).decode()
                     })
 
+@auth.route("/user_exist/<user_id>",methods=['GET'])
+def check_user(user_id):
+    query = db.session.query(User).filter(User.id == user_id)
+    user = query.first()
+    response = False
+    if user :
+        response = True
+
+    return jsonify({"registered": response})
+
 
 @auth.route("/signup", methods=['POST'])
 def signup():
