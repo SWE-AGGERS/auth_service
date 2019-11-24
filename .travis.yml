@@ -3,7 +3,12 @@ python: 3.6
 env:
  - TOX_ENV=py36
 services:
+  - docker
+before_script: pip install docker-compose
+
 install:
  - pip install tox
+
 script:
+ -  docker-compose  run app
  - tox -e $TOX_ENV
