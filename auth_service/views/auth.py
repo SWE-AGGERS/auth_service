@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
 from auth_service.database import db, User
-import datetime
+import jwt
+import datetime as dt
 
 auth = Blueprint('auth', __name__)
 
+PASS_KEY = 'JWT-SECRET-PASS'
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -21,7 +23,11 @@ def login():
             user_id = user.get_id()
         else:
             response = False
-    return jsonify({"response": response, "user_id": user_id})
+
+    return jsonify({"response": response,
+                    "user_id": user_id,
+                    "auth_token": encode_auth_token(user_id).decode()
+                    })
 
 
 @auth.route("/signup", methods=['POST'])
@@ -34,13 +40,13 @@ def signup():
     error_message = ""
     user_id = -1
     error = False
-
+    auth_token = ""
     if result is None:
         user = User()
         user.firstname = json['firstname']
         user.lastname = json['lastname']
         user.email = json['email']
-        user.dateofbirth = datetime.datetime(json['dateofbirth']["year"],json['dateofbirth']["month"],json['dateofbirth']["day"])
+        user.dateofbirth = dt.datetime(json['dateofbirth']["year"],json['dateofbirth']["month"],json['dateofbirth']["day"])
         print(json['password'])
         user.set_password(password=json['password'])
         db.session.add(user)
@@ -49,12 +55,12 @@ def signup():
         user_query = db.session.query(User).filter(User.email == email)
         existing_user = user_query.first()
         user_id = existing_user.get_id()
-
+        auth_token = encode_auth_token(user_id).decode()
     else:
         error = True
         error_message = "User is already exist"
 
-    return jsonify({'user_id': user_id, 'error': error, 'error_message': error_message })
+    return jsonify({'user_id': user_id, 'error': error, 'error_message': error_message, "auth_token":auth_token })
 
 
 @auth.route("/delete/<user_id>", methods=['DELETE'])
@@ -96,4 +102,21 @@ def user(user_id):
     return jsonify({"firstname": user.firstname, "lastname": user.lastname, "email":user.email, "dateofbirth": user.dateofbirth})
 
 
-
+def encode_auth_token(user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': dt.datetime.utcnow() + dt.timedelta(hours=1),
+            'iat': dt.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            PASS_KEY,
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
