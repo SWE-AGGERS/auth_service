@@ -1,6 +1,6 @@
 
 # SocialDice User Service
-[![Build Status](https://travis-ci.org/SWE-AGGERS/auth_service.svg?branch=master)](https://travis-ci.org/SWE-AGGERS/auth_service)
+[![Build Status](https://travis-ci.org/SWE-AGGERS/users_service.svg?branch=master)](https://travis-ci.org/SWE-AGGERS/users_service)
 
 ## Starting docker
 * docker build .
