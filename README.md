@@ -1,7 +1,7 @@
 
-# SocialDice Auth Service
-[![Build Status](https://travis-ci.org/SWE-AGGERS/SocialDice.svg?branch=reactions)](https://travis-ci.org/SWE-AGGERS/SocialDice)
-[![Coverage Status](https://coveralls.io/repos/github/SWE-AGGERS/SocialDice/badge.svg?branch=develop)](https://coveralls.io/github/SWE-AGGERS/SocialDice?branch=develop)
+# SocialDice User Service
+[![Build Status](https://travis-ci.org/SWE-AGGERS/auth_service.svg?branch=master)](https://travis-ci.org/SWE-AGGERS/auth_service)
+
 ## Starting docker
 * docker build .
 * docker tag <image_id> auth_service
