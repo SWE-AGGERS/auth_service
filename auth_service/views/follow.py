@@ -79,45 +79,7 @@ def followed_list(subject):
         result.append(f[0].follower_id)
     return jsonify({"followed": result})
 
-"""
-# TODO: add to the API doc
-# return the followers list
-@follow.route('/followers/list/<int:subject>', methods=['GET'])
-def followers_list(subject):
-    temp = db.session.query(Followers, User).filter(
-        Followers.follower_id == User.id).filter_by(followed_id=subject).all()
-    followers = []
 
-    for f in temp:
-        d = {"id": f[1].id, "firstname": f[1].firstname,
-             "lastname": f[1].lastname}
-        followers.append(d)
-
-    return jsonify({"followers": followers})
-
-
-# TODO: add to API doc
-# return number of followers
-@follow.route('/followers/<int:userid>', methods=['GET'])
-def followers_numer(userid):
-    return jsonify({"followers": get_followers_number(userid)})
-
-
-# TODO: add to API doc
-# return number of followers
-@follow.route('/followed/<int:userid>', methods=['GET'])
-def followed_numer(userid):
-    return jsonify({"followeds": get_followed_number(userid)})
-
-
-
-
-@follow.route('/is_followed/<user_a>/<user_b>', methods=['GET'])
-#check if user_a is followed by user_b
-def get_is_followed(user_a, user_b):
-
-    return jsonify({'follow': is_follower(user_b, user_a)})
-"""
 
 # =============================================================================
 # UTILITY FUNC
@@ -170,17 +132,3 @@ def get_followed_number(user_id):
 def get_followers_of(user_id):
     L = Followers.query.filter_by(follower_id=user_id).all()
     return L
-
-"""
-
-# Get the list of users who follows the user_id
-def get_followed_by(user_id):
-    L = Followers.query.filter_by(followed_id=user_id).all()
-    return L
-
-
-# Get the number of followers
-def get_followers_number(user_id):
-    return len(get_followed_by(user_id))
-
-"""
