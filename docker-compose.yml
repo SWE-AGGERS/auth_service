@@ -1,0 +1,10 @@
+version: '3'
+services:
+  reacts:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes: # for bind volume
+      - '.:/code'
+    environment:
+      PYTHONUNBUFFERED: 'true'
