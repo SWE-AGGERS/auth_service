@@ -30,39 +30,39 @@ class TestFollow(unittest.TestCase):
             # call /follow/a/b
             # return {"followed": 1, "message": "OK"}
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_b_id))
-            data = b'{\"followed": 1, "message": "OK"}'
+            data = '{"followed":1,"message":"OK"}'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/b another time
             # return {"followed": -1, "message": "You already follow this user"}
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_b_id))
-            data = b'{"followed": -1, "message": "You already follow this user"}'
+            data = '{"followed":-1,"message":"You already follow this user"}'
             self.assertIn(data, str(reply.data))
 
 
             # call /follow/a/c
             # return {"followed": 1, "message": "OK"}
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_c_id))
-            data = b'{\"followed": 2, "message": "OK"}'
+            data = '{"followed":2,"message":"OK"}'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/b another time
             # return {"followed": -1, "message": "You already follow this user"}
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_b_id))
-            data = b'{"followed": -1, "message": "You already follow this user"}'
+            data = '{"followed":-1,"message":"You already follow this user"}'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/a (himslef)
             # return {"followed": -2, "message": "You can't self-follow"}
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_a_id))
-            data = b'{"followed": -2, "message": "You can\'t self-follow"}'
+            data = '{"followed":-2,"message":"You can'
             self.assertIn(data, str(reply.data))
             
             # call /follow/a/not_exist_id
             # return {"followed": -3, "message": "The user does not exist"}
             user_not_exist_id = 99999999999
             reply = client.post('/follow/'+str(user_a_id)+'/'+str(user_not_exist_id))
-            data = b'{"followed": -3, "message": "The user does not exist"}'
+            data = '{"followed":-3,"message":"The user does not exist"}'
             self.assertIn(data, str(reply.data))
 
             logout(client)        
@@ -88,8 +88,8 @@ class TestFollow(unittest.TestCase):
                 # return {"followed": []}
                 reply = client.get('/followed/list/'+str(user_a_id))
                 data = 0
-                res = len(json.dump(reply.data).followed)
-                self.assertEqual(data, res)
+                res = json.loads(str(reply.data, 'UTF8'))
+                self.assertEqual(data, len(res["followed"]))
 
                 # Create followers
                 with client.session_transaction() as session:
@@ -99,8 +99,8 @@ class TestFollow(unittest.TestCase):
                 # return {"followed": [<b>, <c>]}
                 reply = client.get('/followed/list/'+str(user_a_id))
                 data = 2
-                res = len(json.dump(reply.data).followed)
-                self.assertEqual(data, res)                    
+                res = json.loads(str(reply.data, 'UTF8'))
+                self.assertEqual(data, len(res["followed"]))                  
 
                 client.delete('/follow/'+str(user_a_id)+'/'+str(user_b_id))
 
@@ -108,8 +108,8 @@ class TestFollow(unittest.TestCase):
                 # return {"followed": [<c>]}
                 reply = client.get('/followed/list/'+str(user_a_id))
                 data = 1
-                res = len(json.dump(reply.data).followed)
-                self.assertEqual(data, res)   
+                res = json.loads(str(reply.data, 'UTF8'))
+                self.assertEqual(data, len(res["followed"]))
                     
 
     def test_unfollow_user(self):
@@ -134,26 +134,26 @@ class TestFollow(unittest.TestCase):
             # call /follow/a/a
             # return {"followed": -2, "message": "You can't self-unfollow"}
             reply = client.delete('/follow/'+str(user_a_id)+'/'+str(user_a_id))
-            data = b'{"followed": -2, "message": "You can\'t self-unfollow"}'
+            data = '{"followed":-2,"message":"You can'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/b
             # return {"followed": 1, "message": "OK"}
             reply = client.delete('/follow/'+str(user_a_id)+'/'+str(user_b_id))
-            data = b'{"followed": 1, "message": "OK"}'
+            data = '{"followed":1,"message":"OK"}'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/b another time
             # return {"followed": -1, "message": "You do not already follow this user"}
             reply = client.delete('/follow/'+str(user_a_id)+'/'+str(user_b_id))
-            data = b'{"followed": -1, "message": "You do not already follow this user"}'
+            data = '{"followed":-1,"message":"You do not already follow this user"}'
             self.assertIn(data, str(reply.data))
 
             # call /follow/a/not_exist_id
             # return {"followed": -3, "message": "The user does not exist"}
             user_not_exist_id = 999999999999
             reply = client.delete('/follow/'+str(user_a_id)+'/'+str(user_not_exist_id))
-            data = b'{"followed": -3, "message": "The user does not exist"}'
+            data = '{"followed":-3,"message":"The user does not exist"}'
             self.assertIn(data, str(reply.data))
 
 def login(client, username, password):

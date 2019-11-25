@@ -12,24 +12,24 @@ def follow_user(follower_id,followed_id):
 
     # if try to follow himeself
     if int(followed_id) == int(subject):
-        return {"followed": -2, "message": "You can't self-follow"}
+        return jsonify({"followed": -2, "message": "You can't self-follow"})
 
     # if already followed
     if is_follower(subject, followed_id):
-        return {"followed": -1, "message": "You already follow this user"}
+        return jsonify({"followed": -1, "message": "You already follow this user"})
 
     # if the followed user do not exist
     if User.query.filter_by(id=followed_id).first() == None:
-        return {"followed": -3, "message": "The user does not exist"}
+        return jsonify({"followed": -3, "message": "The user does not exist"})
 
     # add to follower_table the tuple (follower_id, followed_id)
     result = add_follow(subject, followed_id)
     if result == -1:
         # db.session.add error
-        return {"followed": -4, "message": "DB error during add_follow"}
+        return jsonify({"followed": -4, "message": "DB error during add_follow"})
 
     # return OK + number of users followed
-    return {"followed": get_followed_number(subject), "message": "OK"}
+    return jsonify({"followed": get_followed_number(subject), "message": "OK"})
 
 
 # Unfollow a writer
@@ -74,7 +74,10 @@ def get_is_follower(user_a, user_b):
 def followed_list(subject):
     followed = db.session.query(Followers, User).filter(
         Followers.followed_id == User.id).filter_by(follower_id=subject).all()
-    return jsonify({"followed": followed})
+    result = []
+    for f in followed:
+        result.append(f[0].follower_id)
+    return jsonify({"followed": result})
 
 """
 # TODO: add to the API doc
@@ -159,11 +162,16 @@ def delete_follow(user_a, user_b):
         db.session.rollback()
         return -1
 
-"""
+# Get the number of followed
+def get_followed_number(user_id):
+    return len(get_followers_of(user_id))
+
+
 def get_followers_of(user_id):
     L = Followers.query.filter_by(follower_id=user_id).all()
     return L
 
+"""
 
 # Get the list of users who follows the user_id
 def get_followed_by(user_id):
@@ -175,8 +183,4 @@ def get_followed_by(user_id):
 def get_followers_number(user_id):
     return len(get_followed_by(user_id))
 
-
-# Get the number of followed
-def get_followed_number(user_id):
-    return len(get_followers_of(user_id))
 """
