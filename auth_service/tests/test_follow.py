@@ -3,8 +3,7 @@ import json
 from flask import request, jsonify
 from auth_service.app import create_app
 from auth_service.database import db, User, Followers
-from auth_service.auth import login_manager
-from auth_service.views.follow import _create_follow, _is_follower
+from auth_service.views.follow import create_follow, is_follower
 from auth_service.tests.restart_db import restart_db_tables
 
 
@@ -206,9 +205,9 @@ def create_test_users(session):
 
 
 def create_test_follow(session, user_a_id, user_b_id, user_c_id):
-    follow_ab = _create_follow(user_a_id, user_b_id)
-    follow_ac = _create_follow(user_a_id, user_c_id)
-    follow_bc = _create_follow(user_b_id, user_c_id)
+    follow_ab = create_follow(user_a_id, user_b_id)
+    follow_ac = create_follow(user_a_id, user_c_id)
+    follow_bc = create_follow(user_b_id, user_c_id)
 
     db.session.add(follow_ab)
     db.session.add(follow_ac)
