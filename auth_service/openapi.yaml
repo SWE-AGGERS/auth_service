@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: SocialDice Auth Service
+  title: SocialDice Users Service
 
 paths:
   /login:
@@ -134,3 +134,131 @@ paths:
                           Messages:
                            * `'True'` - User was deleted
                            * `'False'` - User was not deleted
+
+  /follow/<follower_id>/<followed_id>:
+    get:
+      summary: add the follow from follower_id to followed_id
+      responses:
+        '200':
+          description: return a JSON with a message and an integer, that if it is positive it will be intended as the new number of followeds after the operation, else is the error code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: >
+                      Messages:
+                       * `'You already follow this user'` - userid already followed
+                       * `'You can't self-follow'` - self follow error
+                       * `'The user does not exist'` - userid does not exist
+                       * `'DB error during add_follow'` - DB error
+                       * `'OK'` - follow added correctly
+                       
+                  followed:
+                    type: integer
+                    description: >
+                      types:
+                        * `-1` - userid already followed
+                        * `-2` - self follow error
+                        * `-3` - userid does not exist
+                        * `-4` - DB error
+                        * `n` - follow added correctly, n=actual number of followeds users
+
+    delete:
+      summary: unfollow userid
+      responses:
+        '200':
+          description: return a JSON with a message and an integer, that if it is positive it will be intended as the new number of followeds after the operation, else is the error code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: >
+                      Messages:
+                       * `'You already follow this user'` - userid already followed
+                       * `'You can\'t self-follow'` - self follow error
+                       * `'The user does not exist'` - userid does not exist
+                       * `'DB error during add_follow'` - DB error
+                       * `'OK'` - follow added correctly
+                       
+                  followed:
+                    type: integer
+                    description: >
+                      types:
+                        * `-1` - userid already followed
+                        * `-2` - self follow error
+                        * `-3` - userid does not exist
+                        * `-4` - DB error
+                        * `n` - follow added correctly, n=actual number of followeds users
+                    
+  /unfollow/<follower_id>/<followed_id>:
+    post:
+      summary: add the follow from follower_id to followed_id
+      responses:
+        '200':
+          description: return a JSON with a message and an integer, that if it is positive it will be intended as the new number of followeds after the operation, else is the error code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: >
+                      Messages:
+                       * `'You already follow this user'` - userid already followed
+                       * `'You can\'t self-follow'` - self follow error
+                       * `'The user does not exist'` - userid does not exist
+                       * `'DB error during add_follow'` - DB error
+                       * `'OK'` - follow added correctly
+                       
+                  followed:
+                    type: integer
+                    description: >
+                      types:
+                        * `-1` - userid already followed
+                        * `-2` - self follow error
+                        * `-3` - userid does not exist
+                        * `-4` - DB error
+                        * `n` - follow added correctly, n=actual number of followeds users
+    
+  /is_follower/<user_a>/<user_b>:
+    get:
+      summary: check if user_a follow user_b
+      responses:
+        '200':
+          description: return a json with a boolean, which is True if user_a follow user_b, or False otherwise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  follow:
+                    type: boolean
+                    description: >
+                      types:
+                        * `True` - If user_a follow user_b
+                        * `False` - otherwise
+
+  /followed/list/<subject>:
+    get:
+      summary: Return the list of the users followed by subject
+      responses:
+        '200':
+          description: return all the users followed by the subject as a JSON
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  followed:
+                    type: array
+                    items:
+                      type: integer
+                description: List of user_id
+                      
