@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy import func
+
 from auth_service.database import db, User
 import jwt
 import datetime as dt
@@ -56,17 +58,12 @@ def signup():
     check_query = db.session.query(User).filter(User.email == email)
     result = check_query.first()
 
-    error_message = ""
-    user_id = -1
-    error = False
-    auth_token = ""
     if result is None:
         user = User()
         user.firstname = json['firstname']
         user.lastname = json['lastname']
         user.email = json['email']
-        user.dateofbirth = dt.datetime(json['dateofbirth']["year"],json['dateofbirth']["month"],json['dateofbirth']["day"])
-        print(json['password'])
+        user.dateofbirth = dt.datetime(int(json['dateofbirth']["day"]), int(json['dateofbirth']["month"]), int(json['dateofbirth']["year"]))
         user.set_password(password=json['password'])
         db.session.add(user)
         db.session.commit()
@@ -75,11 +72,23 @@ def signup():
         existing_user = user_query.first()
         user_id = existing_user.get_id()
         auth_token = encode_auth_token(user_id).decode()
+        return jsonify({
+            "error": False,
+            "firstname": user.firstname,
+            "lastname": user.lastname,
+            "email": user.email,
+            "dateofbirth": user.dateofbirth,
+            "auth_token":auth_token,
+            "is_admin": user.is_admin,
+            "is_active": user.is_active,
+            "is_authenticated": user.authenticated,
+            "user_id": user.id
+        })
     else:
         error = True
         error_message = "User is already exist"
-
-    return jsonify({'user_id': user_id, 'error': error, 'error_message': error_message, "auth_token":auth_token })
+        return jsonify({'error': error,
+                        'error_message': error_message})
 
 
 @auth.route("/delete/<user_id>", methods=['DELETE'])
@@ -131,6 +140,39 @@ def user(user_id):
                     "is_authenticated": user.authenticated,
                     "user_id": user.id
                     })
+
+
+@auth.route("/search/<keywords>", methods=["GET"])
+def search(keywords):
+    parameters = keywords.split()
+    users = []
+
+    if len(parameters) == 2:
+        r1 = User.query.filter(func.lower(User.firstname) == func.lower(parameters[0]))
+        for user in r1:
+            user_json = result_json(user_id=user.id, firstname=user.firstname, lastname=user.lastname)
+            users.append(user_json)
+        r2 = User.query.filter(func.lower(User.lastname) == func.lower(parameters[1]))
+        for user in r2:
+            user_json = result_json(user_id=user.id, firstname=user.firstname, lastname=user.lastname)
+            users.append(user_json)
+
+    elif len(parameters) == 1:
+        r1 = User.query.filter(func.lower(User.firstname) == func.lower(parameters[0]))
+        for user in r1:
+            user_json = result_json(user_id=user.id, firstname=user.firstname, lastname=user.lastname)
+            users.append(user_json)
+        r2 = User.query.filter(func.lower(User.lastname) == func.lower(parameters[0]))
+        for user in r2:
+            user_json = result_json(user_id=user.id, firstname=user.firstname, lastname=user.lastname)
+            users.append(user_json)
+
+    return jsonify(users) if len(users) > 0 else None
+
+
+def result_json(user_id, firstname, lastname):
+    return {"user_id": user_id, "firstname": firstname, "lastname": lastname}
+
 
 
 def encode_auth_token(user_id):
