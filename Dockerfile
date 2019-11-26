@@ -17,4 +17,4 @@ ENV FLASK_APP auth_service/app.py
 EXPOSE 5000
 
 # bind to 0.0.0.0 will make Docker works
-CMD ["flask","run","--host", "0.0.0.0"]
+CMD ["flask","run","--host", "0.0.0.0","--port", "5000"]
