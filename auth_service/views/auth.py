@@ -63,7 +63,7 @@ def signup():
         user.firstname = json['firstname']
         user.lastname = json['lastname']
         user.email = json['email']
-        user.dateofbirth = dt.datetime(int(json['dateofbirth']["day"]), int(json['dateofbirth']["month"]), int(json['dateofbirth']["year"]))
+        user.dateofbirth = dt.datetime(int(json['dateofbirth']["year"]), int(json['dateofbirth']["month"]), int(json['dateofbirth']["day"]))
         user.set_password(password=json['password'])
         db.session.add(user)
         db.session.commit()
