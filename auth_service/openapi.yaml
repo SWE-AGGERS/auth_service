@@ -39,14 +39,31 @@ paths:
                        * `'False'` - User is not authenticated
                   user_id:
                     type: integer 
-     
-                    
+                  dateofbirth:
+                    type: string
+                  email:
+                    type: string
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  is_active:
+                    type: boolean
+                  is_admin:
+                    type: boolean
+                  is_authenticated:
+                    type: boolean
+                  auth_token:
+                    type: string
+
+
+
   /singup:
     post:
       summary: "checks user data and create an user on database"
       description: ""
       operationId: "Sing up user"
-      
+
       requestBody:
         content:
           application/json:
@@ -69,7 +86,7 @@ paths:
                 - email
                 - dateofbirth
                 - password
-                  
+
       responses:
         '200':
           description: A JSON string with a response message
@@ -78,19 +95,38 @@ paths:
               schema:
                 type: object
                 properties:
-                  response: 
+                  error:
                     type: boolean
                     description: >
                       Messages:
                        * `'True'` - User was created
                        * `'False'` - User was not created
                   user_id:
-                     type: integer  
+                     type: integer
                      description: >
                       Messages:
                         * `-1` - User email is used already or error.
                         * `< 0 ` - Registered user and return id of user.
-                        
+                  dateofbirth:
+                    type: string
+                  email:
+                    type: string
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  is_active:
+                    type: boolean
+                  is_admin:
+                    type: boolean
+                  is_authenticated:
+                    type: boolean
+                  auth_token:
+                    type: string
+
+
+
+
   /user/<user_id>:
     get:
         summary: "get user information by id"
