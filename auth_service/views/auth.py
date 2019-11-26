@@ -24,10 +24,19 @@ def login():
         else:
             response = False
 
-    return jsonify({"response": response,
-                    "user_id": user_id,
-                    "auth_token": encode_auth_token(user_id).decode()
-                    })
+    return jsonify({
+             "response": response,
+             "user_id": user_id,
+             "firstname": user.firstname,
+             "lastname": user.lastname,
+             "email": user.email,
+             "dateofbirth": user.dateofbirth,
+             "auth_token": encode_auth_token(user_id).decode(),
+             "is_admin": user.is_admin,
+             "is_active": user.is_active,
+             "is_authenticated": user.authenticated
+             })
+
 
 @auth.route("/user_exist/<user_id>",methods=['GET'])
 def check_user(user_id):
@@ -107,9 +116,21 @@ def users():
 
 @auth.route("/user/<user_id>", methods=["GET"])
 def user(user_id):
+
     query = db.session.query(User).filter(User.id == user_id)
     user = query.first()
-    return jsonify({"firstname": user.firstname, "lastname": user.lastname, "email":user.email, "dateofbirth": user.dateofbirth})
+
+    return jsonify({"response":True,
+                    "firstname": user.firstname,
+                    "lastname": user.lastname,
+                    "email":user.email,
+                    "dateofbirth": user.dateofbirth,
+                    "auth_token": encode_auth_token(user_id).decode(),
+                    "is_admin": user.is_admin,
+                    "is_active": user.is_active,
+                    "is_authenticated": user.authenticated,
+                    "user_id": user.id
+                    })
 
 
 def encode_auth_token(user_id):

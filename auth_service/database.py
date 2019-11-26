@@ -19,10 +19,12 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
     is_anonymous = False
+    authenticated = False
+
 
     def __init__(self, *args, **kw):
         super(User, self).__init__(*args, **kw)
-        self._authenticated = False
+
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
