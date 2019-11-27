@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, json
 from sqlalchemy import func
 
 from auth_service.database import db, User
@@ -53,18 +53,22 @@ def check_user(user_id):
 
 @auth.route("/signup", methods=['POST'])
 def signup():
-    json = request.get_json()
-    email = json['email']
+    _json = json.loads(request.get_json())
+    email = _json['email']
     check_query = db.session.query(User).filter(User.email == email)
     result = check_query.first()
 
     if result is None:
         user = User()
-        user.firstname = json['firstname']
-        user.lastname = json['lastname']
-        user.email = json['email']
-        user.dateofbirth = dt.datetime(int(json['dateofbirth']["year"]), int(json['dateofbirth']["month"]), int(json['dateofbirth']["day"]))
-        user.set_password(password=json['password'])
+        user.firstname = _json['firstname']
+        user.lastname = _json['lastname']
+        user.email = _json['email']
+        try:
+            user.dateofbirth = dt.datetime(int(_json['dateofbirth']["year"]), int(_json['dateofbirth']["month"]), int(_json['dateofbirth']["day"]))
+        except:
+            pass
+
+        user.set_password(password=_json['password'])
         db.session.add(user)
         db.session.commit()
 
@@ -120,7 +124,7 @@ def users():
 
             data.append(usern)
 
-        return jsonify(data)
+        return jsonify({"result":data})
 
 
 @auth.route("/user/<user_id>", methods=["GET"])
